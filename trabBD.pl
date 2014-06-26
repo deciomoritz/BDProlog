@@ -39,10 +39,10 @@ cadastra_livroi:-get_titulo(T), get_autor(A),get_id(I), insert(livro,[T,A,I],L),
 cadastra_usuarioi:-get_nome(N),get_id(I),insert(usuario,[N,I],L),write(L),nl,write('Usuário adicionado a base de dados.'),nl.
 
 %Opção C
-efetua_emprestimoi:- get_id(I),get_titulo(T),insert(emprestimo,[I,T],L),write(L),nl,write('empréstimo efetuado.').
+efetua_emprestimoi:- write('Do usuário:'),nl,get_id(I),write('Do livro:'),nl,get_id(T),insert(emprestimo,[I,T],L),write(L),nl,write('empréstimo efetuado.').
 
 %Opção D
-devolucaoi:- get_id(I),retract(emprestimo(I,_)), write('Livro devolvido').
+devolucaoi:- write('Do livro:'),nl,get_id(I),retract(emprestimo(_,I)), write('Livro devolvido').
 
 %Opção E
 busca_livroi:- write('Opcao a - Buscar por título; '), nl,
@@ -64,8 +64,8 @@ busca_usuarioi:- write('Opcao a - Buscar por nome; '), nl,
 executa_bu(X):- (X=a,busca_nome);
 	        (X=b,busca_id).
 
-busca_nome:-get_nome(N),busca_nome(N,L1), write('Nome: '),write(N),nl,write('Lista dos IDs encontrados: '),nl,write(L1),nl,nl.
-busca_id:-get_id(I),busca_id(I,L1), write('ID: '),write(N),nl,write('Lista dos nomes encontrados: '),nl,write(L1),nl,nl.
+busca_nome:-get_nome(N),busca_usuario(N,_,L1),write('Lista dos usuários encontrados: '),nl,write(L1),nl,nl.
+busca_id:-get_id(I),busca_usuario(_,I,L1),write(N),nl,write('Lista dos usuários encontrados: '),nl,write(L1),nl,nl.
 
 %Opção G
 busca_emprestimoi:- write('Opcao a - Buscar por id de usuário; '), nl,
@@ -73,26 +73,14 @@ busca_emprestimoi:- write('Opcao a - Buscar por id de usuário; '), nl,
 	       read(Opcao),executa_be(Opcao).
 executa_be(X):- (X=a,busca_emp_idi);
 	        (X=b,busca_emp_codi).
-busca_emp_idi:-get_id(I),busca_emp_id(I,L),write('Id do usuário: '), write(I),nl,write('Código dos livros emprestados: '),write(L).
-busca_emp_codi:- get_id(I),busca_emp_cod(I,L),write('Código do livro: '), write(I),nl,write('Usuário com o livro: '),write(L).
+busca_emp_idi:-get_id(I),busca_emp(I,_,L),write('Entradas com os livros emprestados: '),nl,write(L).
+busca_emp_codi:- get_id(I),busca_emp(_,I,L),write('Entrada com o empréstimo do livro: '),nl,write(L).
+
 %Opção H
-remove_usuarioi:- write('Opcao a - Remover por id; '), nl,
-	       write('Opcao b - Remover por nome; ' ),nl,
-	       read(Opcao),executa_ru(Opcao).
-executa_ru(X):- (X=a,remove_us_id);
-	        (X=b,remove_us_nome).
-	        
-remove_us_id:-get_id(I),retract(usuario(_,I)), write('Livro deletado').
-remove_us_nome:- get_nome(N),retract(usuario(N,_)), write('Livro deletado').
+remove_usuarioi:-get_id(I),retract(usuario(_,I)), write('Usuário removido').
+
 %Opção I
-remove_livroi:- write('Opcao a - Remover por id; '), nl,
-	       write('Opcao b - Remover por título; ' ),nl,
-	       read(Opcao),executa_rel(Opcao).
-executa_rel(X):- (X=a,remove_l_id);
-	        (X=b,remove_l_titulo).).
-	        
-remove_l_id:- get_id(I),retract(livro(_,_,I)), write('Livro deletado').
-remove_l_titulo:- get_titulo(T),retract(livro(T,_,_)), write('Livro deletado').
+remove_livroi:-  get_id(I),retract(livro(_,_,I)), write('Livro removido').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 insert(Tab, Args, Termo):- Termo =.. [Tab|Args], assertz(Termo).

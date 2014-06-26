@@ -7,10 +7,14 @@ livro(a2, a, 3).
 livro(b1, b, 4).
 livro(c1, b, 7).
 livro(d1, d, 45).
-livro(a3, aaa, 123).
+livro(qwqwq, qwertr, 72347).
+livro(abacateiros, babaca, 5454).
 
 :- dynamic emprestimo/2.
 
+emprestimo(123, 321).
+emprestimo(444, 123).
 
 :- dynamic usuario/2.
+
 
