@@ -4,6 +4,7 @@ livro('pequeno príncipe', 'zé perri', 1).
 
 :- dynamic emprestimo/2.
 
+emprestimo(1, prin).
 
 :- dynamic usuario/2.
 

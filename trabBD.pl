@@ -42,6 +42,8 @@ cadastra_usuarioi:-get_nome(N),get_id(I),insert(usuario,[N,I],L),write(L),nl,wri
 efetua_emprestimoi:- get_id(I),get_titulo(T),insert(emprestimo,[I,T],L),write(L),nl,write('empréstimo efetuado.').
 
 %Opção D
+devolucaoi:- get_id(I),retract(emprestimo(I,_)), write('Livro devolvido').
+
 %Opção E
 busca_livroi:- write('Opcao a - Buscar por título; '), nl,
 	       write('Opcao b - Buscar por autor; ' ),nl,
