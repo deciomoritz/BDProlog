@@ -1,0 +1,10 @@
+:- dynamic livro/3.
+
+livro('pequeno príncipe', 'zé perri', 1).
+
+:- dynamic emprestimo/2.
+
+
+:- dynamic usuario/2.
+
+
