@@ -7,7 +7,7 @@ tabela(livro(Titulo,Autor,Cod)).
 tabela(emprestimo(Id,Cod)).
 
 %%%%%%%%%%%%%%%%%%%Interface*%%%%%%%%%%%%%%%%%%%%%%%%%
-menu :-	carregar, write('Opcao a - Cadastrar livro; '), nl, %ok
+menu :-	limpar_tudo,carregar, write('Opcao a - Cadastrar livro; '), nl, %ok
 	write('Opcao b - Cadastrar usuário; ' ), nl, %rever
 	write('Opcao c - Efetuar empréstimo; '), nl, %cuidado com cut
 	write('Opcao d - Efetuar devolução;'), nl,  %aprender a remover
@@ -53,9 +53,9 @@ executa_bl(X):- (X=a,busca_titulo);
 	        (X=b,busca_autor);
 		(X=c,busca_codigo).
 
-busca_titulo:-get_titulo(T),busca_titulo(T,_,_,L1,L2),write('Titulo: '),write(T),nl,write('Lista dos autores e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
-busca_autor:-get_autor(A),busca_autor(_,A,_,L1,L2), write('Autor: '),write(T),nl,write('Lista dos títulos e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
-busca_codigo:-get_id(C),busca_codigo(_,_,C,L1,L2), write('Código: '),write(T),nl,write('Lista dos títulos e os respectivos autores de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
+busca_titulo:-get_titulo(T),busca_livro(T,_,_,L1),write('Lista dos livros encontrados: '),nl,write(L1),nl,nl.
+busca_autor:-get_autor(A),busca_livro(_,A,_,L1),write('Lista dos livros encontrados '),nl,write(L1),nl,nl.
+busca_codigo:-get_id(C),busca_livro(_,_,C,L1),write('Lista dos livros encontrados encontrados: '),nl,write(L1),nl.
 
 %Opção F
 busca_usuarioi:- write('Opcao a - Buscar por nome; '), nl,
@@ -87,22 +87,19 @@ remove_us_nome:- get_nome(N),retract(usuario(N,_)), write('Livro deletado').
 %Opção I
 remove_livroi:- write('Opcao a - Remover por id; '), nl,
 	       write('Opcao b - Remover por título; ' ),nl,
-  	       write('Opcao c - Remover por autor; ' ),nl,
 	       read(Opcao),executa_rel(Opcao).
 executa_rel(X):- (X=a,remove_l_id);
-	        (X=b,remove_l_titulo);
-   	        (X=c,remove_l_autor).
+	        (X=b,remove_l_titulo).).
 	        
 remove_l_id:- get_id(I),retract(livro(_,_,I)), write('Livro deletado').
-remove_l_titulo:- get_autor(A),retract(livro(_,A,_)), write('Livro deletado').
-remove_l_autor:- get_titulo(T),retract(livro(T,_,_)), write('Livro deletado').
+remove_l_titulo:- get_titulo(T),retract(livro(T,_,_)), write('Livro deletado').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 insert(Tab, Args, Termo):- Termo =.. [Tab|Args], assertz(Termo).
 
-busca_livro(T,A,C,L1):-carregar,findall(livro(T,A,C),livro(T,A,C),L1).
-busca_usuario(N,I,L1):-carregar,findall(usuario(N,I),usuario(N,I),L1).
-busca_emp(I,C,L1):-carregar,findall(emprestimo(I,C),emprestimo(I,C),L1).
+busca_livro(T,A,C,L1):-findall(livro(T,A,C),livro(T,A,C),L1).
+busca_usuario(N,I,L1):-findall(usuario(N,I),usuario(N,I),L1).
+busca_emp(I,C,L1):-findall(emprestimo(I,C),emprestimo(I,C),L1).
 carregar:-
 	open('ttt.txt', append, S), write(S,''),close(S),
 	['ttt.txt'].
@@ -113,3 +110,9 @@ salva_arquivo :-
 	listing(emprestimo),
 	listing(usuario), 
 	told.
+limpar_tudo:- busca_livro(_,_,_,L),limpar(L),busca_usuario(_,_,U),limpar(U),busca_emp(_,_,E),limpar(E).
+limpar([]).
+limpar(X) :- removeDoInicio(Z,X,L),
+             retract(Z),
+             limpar(L).
+removeDoInicio(A,[A|T],T).

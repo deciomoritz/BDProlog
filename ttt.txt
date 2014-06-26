@@ -1,11 +1,16 @@
 :- dynamic livro/3.
 
-livro('pequeno príncipe', 'zé perri', 1).
+livro(a22, qwe, 1234234).
+livro(a1, a, 1).
+livro(a1, a, 2).
+livro(a2, a, 3).
+livro(b1, b, 4).
+livro(c1, b, 7).
+livro(d1, d, 45).
+livro(a3, aaa, 123).
 
 :- dynamic emprestimo/2.
 
-emprestimo(1, prin).
 
 :- dynamic usuario/2.
-
 
