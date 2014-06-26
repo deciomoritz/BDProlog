@@ -51,9 +51,9 @@ executa_bl(X):- (X=a,busca_titulo);
 	        (X=b,busca_autor);
 		(X=c,busca_codigo).
 
-busca_titulo:-get_titulo(T),busca_titulo(T,L1,L2),write('Titulo: '),write(T),nl,write('Lista dos autores e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
-busca_autor:-get_autor(A),busca_autor(A,L1,L2), write('Autor: '),write(T),nl,write('Lista dos títulos e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
-busca_codigo:-get_id(C),busca_codigo(C,L1,L2), write('Código: '),write(T),nl,write('Lista dos títulos e os respectivos autores de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
+busca_titulo:-get_titulo(T),busca_titulo(T,_,_,L1,L2),write('Titulo: '),write(T),nl,write('Lista dos autores e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
+busca_autor:-get_autor(A),busca_autor(_,A,_,L1,L2), write('Autor: '),write(T),nl,write('Lista dos títulos e os respectivos códigos de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
+busca_codigo:-get_id(C),busca_codigo(_,_,C,L1,L2), write('Código: '),write(T),nl,write('Lista dos títulos e os respectivos autores de cada exemplar encontrado: '),nl,write(L1),nl,write(L2),nl,nl.
 
 %Opção F
 busca_usuarioi:- write('Opcao a - Buscar por nome; '), nl,
@@ -98,15 +98,9 @@ remove_l_autor:- get_titulo(T),retract(livro(T,_,_)), write('Livro deletado').
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 insert(Tab, Args, Termo):- Termo =.. [Tab|Args], assertz(Termo).
 
-
-busca_titulo(T,L1,L2):-carregar,findall(A,livro(T,A,_),L1),findall(C,livro(T,_,C),L2).
-busca_autor(A,L1,L2):-carregar,findall(T,livro(T,A,_),L1),findall(C,livro(_,A,C),L2).
-busca_codigo(C,L1,L2):-carregar,findall(T,livro(T,_,C),L1),findall(A,livro(_,A,C),L2).
-busca_nome(N,L1):-carregar,findall(I,usuario(N,I),L1).
-busca_id(I,L1):-carregar,findall(N,usuario(N,I),L1).
-busca_emp_id(I,L1):-carregar,findall(C,emprestimo(I,C),L1).
-busca_emp_cod(C,L1):-carregar,findall(C,usuario(I,C),L1).
-
+busca_livro(T,A,C,L1):-carregar,findall(livro(T,A,C),livro(T,A,C),L1).
+busca_usuario(N,I,L1):-carregar,findall(usuario(N,I),usuario(N,I),L1).
+busca_emp(I,C,L1):-carregar,findall(emprestimo(I,C),emprestimo(I,C),L1).
 carregar:-
 	open('ttt.txt', append, S), write(S,''),close(S),
 	['ttt.txt'].
